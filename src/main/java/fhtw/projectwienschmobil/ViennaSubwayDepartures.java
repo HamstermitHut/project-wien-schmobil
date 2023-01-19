@@ -9,25 +9,37 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ViennaSubwayDepartures {
     private static final String API_URL = "https://www.wienerlinien.at/ogd_realtime/monitor?diva=";
-
-    public static List<String> getDepartureTimes(String selectedStation) throws IOException {
+    public static Map<String, List<String>> getDepartureTimes(String selectedStation) throws IOException {
         String url = API_URL + selectedStation;
-        System.out.println(url);
         String json = getJsonFromUrl(url);
         ViennaSubwayApiResponse response = new Gson().fromJson(json, ViennaSubwayApiResponse.class);
         ViennaSubwayApiData data = response.getData();
         List<ViennaSubwayApiMonitor> monitors = data.getMonitors();
 
         if (monitors.isEmpty()) {
-            return new ArrayList<>();
+            return new HashMap<>();
         }
-        ViennaSubwayApiMonitor monitor = monitors.get(0);
 
-        return monitor.getLines().get(0).departures.getDepartureTimes();
+        Map<String, List<String>> departureTimes = new HashMap<>();
+        for (ViennaSubwayApiMonitor monitor : monitors) {
+            List<ViennaSubwayApiLine> lines = monitor.getLines();
+            for (ViennaSubwayApiLine line : lines) {
+                String lineNumber = line.getName();
+                List<String> lineDepartureTimes = new ArrayList<>();
+                for (ViennaSubwayApiDeparture departure : line.departures.departure) {
+                    lineDepartureTimes.add(departure.getDepartureTime().getTimePlanned());
+                }
+                departureTimes.put(lineNumber, lineDepartureTimes);
+            }
+        }
+
+        return departureTimes;
     }
 
     private static String getJsonFromUrl(String url) throws IOException {
@@ -49,6 +61,63 @@ public class ViennaSubwayDepartures {
         }
     }
 
+    class ViennaSubwayApiLine {
+        @SerializedName("name")
+        private String name;
+        @SerializedName("towards")
+        private String towards;
+        @SerializedName("direction")
+        private String direction;
+        @SerializedName("platform")
+        private String platform;
+        @SerializedName("richtungsId")
+        private String richtungsId;
+        @SerializedName("barrierFree")
+        private boolean barrierFree;
+        @SerializedName("realtimeSupported")
+        private boolean realtimeSupported;
+        @SerializedName("trafficjam")
+        private boolean trafficjam;
+        @SerializedName("departures")
+        private ViennaSubwayApiDepartures departures;
+        @SerializedName("type")
+        private String type;
+        @SerializedName("lineId")
+        private int lineId;
+        public String getName() {
+            return name;
+        }
+        public String getTowards() {
+            return towards;
+        }
+        public String getDirection() {
+            return direction;
+        }
+        public String getPlatform() {
+            return platform;
+        }
+        public String getRichtungsId() {
+            return richtungsId;
+        }
+        public boolean isBarrierFree() {
+            return barrierFree;
+        }
+        public boolean isRealtimeSupported() {
+            return realtimeSupported;
+        }
+        public boolean isTrafficjam() {
+            return trafficjam;
+        }
+        public ViennaSubwayApiDepartures getDepartures() {
+            return departures;
+        }
+        public String getType() {
+            return type;
+        }
+        public int getLineId() {
+            return lineId;
+        }
+    }
     class ViennaSubwayApiResponse {
 
         @SerializedName("data")
@@ -70,19 +139,10 @@ public class ViennaSubwayDepartures {
 
     class ViennaSubwayApiMonitor {
         @SerializedName("lines")
-        List<ViennaSubwayApiLines> lines;
+        List<ViennaSubwayApiLine> lines;
 
-        public List<ViennaSubwayApiLines> getLines() {
+        public List<ViennaSubwayApiLine> getLines() {
             return lines;
-        }
-    }
-
-    class ViennaSubwayApiLines {
-        @SerializedName("departures")
-        ViennaSubwayApiDepartures departures;
-
-        public ViennaSubwayApiDepartures getDepartures() {
-            return departures;
         }
     }
 
