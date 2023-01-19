@@ -15,7 +15,7 @@ public class threadedServer {
         ServerSocket serverSocket = null;
         Socket socket = null;
 
-        int port=Integer.parseInt(args[0]);
+        int port=1234;
         try {
             serverSocket = new ServerSocket(port);
         } catch (IOException e) {

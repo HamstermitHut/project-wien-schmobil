@@ -10,7 +10,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.IOException;
+import java.io.*;
+import java.net.Socket;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,13 +20,29 @@ import java.util.Map;
 public class SubwayStationList extends Application{
     private Stage window;
     private ListView<String> listView;
-
+    private Socket socket;
+    private BufferedReader bufferedReader;
+    private PrintWriter printWriter;
+    private ObjectInputStream objectInputStream;
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        String zuSendendeNachricht, ip = "127.0.0.1";
+        int port = 1234;
+        this.socket = new Socket(ip, port);
+        this.printWriter = new PrintWriter(this.socket.getOutputStream(), true);
+        this.bufferedReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+        this.objectInputStream=new ObjectInputStream(socket.getInputStream());
+        schreibeNachricht(socket,"stations");
+
+        List<String> stations =(List<String>)objectInputStream.readObject();
+
+        System.out.println(stations.toString());
+
         window = primaryStage;
         window.setTitle("Vienna Subway Stations");
 
@@ -34,7 +51,7 @@ public class SubwayStationList extends Application{
         listView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
         // load the subway station names from the API
-        ObservableList<String> items = FXCollections.observableArrayList(ViennaSubwayStations.getSubwayStations());
+        ObservableList<String> items = FXCollections.observableArrayList(stations);
         listView.setItems(items);
 
         // create the "Show Departure Times" button
@@ -50,6 +67,25 @@ public class SubwayStationList extends Application{
         Scene scene = new Scene(layout, 300, 250);
         window.setScene(scene);
         window.show();
+    }
+    /**
+     * Methode zum kommunizieren (schreiben) mit dem Server über Streams und Sockets
+     * @param socket
+     * @param nachricht
+     * @throws IOException
+     */
+    void schreibeNachricht(Socket socket, String nachricht) throws IOException {
+        this.printWriter.println(nachricht);
+        this.printWriter.flush();
+    }
+    /**
+     * Methode zum kommunizieren (lesen) mit dem Server über Streams und Sockets
+     * @param socket
+     * @throws IOException
+     */
+    String leseNachricht(Socket socket) throws IOException {
+        String nachricht = this.bufferedReader.readLine();
+        return nachricht;
     }
     private void showDepartureTimes() {
         String selectedStation = listView.getSelectionModel().getSelectedItem();
