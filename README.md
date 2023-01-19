@@ -7,17 +7,17 @@ Der Client kommuniziert mit einem Server, welcher je nach Anfrage auf die API f�
 # Must Have Features (Genügend)
 
 - [ ] Mehrere Clients können eine Applikation mit einem Server aufrufen, welcher als threaded Server geführt wird und immer einen Server-Thread startet
-- [ ] Ein Client kann eine GUI Applikation aufrufen
+- [X] Ein Client kann eine GUI Applikation aufrufen
 - [ ] Der GUI-Client kann mit dem Server interagieren
-- [ ] Es wird ein CSV-File mit allen Haltestellen in Wien eingelesen und als Auswahl in der GUI angezeigt
-- [ ] Ein Benutzer kann eine Haltestelle auswählen aus der Liste und alle Abfahrtszeiten angezeigten lassen
-- [ ] Der Client kann die Applikation mit einem Button schließen, alle Ressourcen werden sauber geschlossen
+- [X] Es wird ein CSV-File mit allen Haltestellen in Wien eingelesen und als Auswahl in der GUI angezeigt
+- [X] Ein Benutzer kann eine Haltestelle auswählen aus der Liste und alle Abfahrtszeiten angezeigten lassen
+- [X] Der Client kann die Applikation mit einem Button schließen, alle Ressourcen werden sauber geschlossen
 
 ## Weitere Features
 
 - [ ] Der Client kann die Haltestellen filtern nach Bezirken 1
 - [ ] Der Client kann die Haltestellen filtern nach Beförderungsmittel (Bus, U-Bahn, ....) 2
-- [ ] Der Client kann die Abfahrtszeitenliste filtern nach Beförderungsmittel 2
+- [X] Der Client kann die Abfahrtszeitenliste filtern nach Beförderungsmittel 2
 - [ ] Fahrtrichtung auswählen, wenn nur ein Beförderungsmittel auswählt ist 2
 - [ ] Gleis oder Steig des Fahrzeugs anzeigen lassen 3
 - [ ] Verbleibende Minuten bis zur Abfahrt anzeigen lassen 3
