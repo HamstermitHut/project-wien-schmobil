@@ -6,9 +6,9 @@ Der Client kommuniziert mit einem Server, welcher je nach Anfrage auf die API f�
 
 # Must Have Features (Genügend)
 
-- [ ] Mehrere Clients können eine Applikation mit einem Server aufrufen, welcher als threaded Server geführt wird und immer einen Server-Thread startet
+- [X] Mehrere Clients können eine Applikation mit einem Server aufrufen, welcher als threaded Server geführt wird und immer einen Server-Thread startet
 - [X] Ein Client kann eine GUI Applikation aufrufen
-- [ ] Der GUI-Client kann mit dem Server interagieren
+- [X] Der GUI-Client kann mit dem Server interagieren
 - [X] Es wird ein CSV-File mit allen Haltestellen in Wien eingelesen und als Auswahl in der GUI angezeigt
 - [X] Ein Benutzer kann eine Haltestelle auswählen aus der Liste und alle Abfahrtszeiten angezeigten lassen
 - [X] Der Client kann die Applikation mit einem Button schließen, alle Ressourcen werden sauber geschlossen
