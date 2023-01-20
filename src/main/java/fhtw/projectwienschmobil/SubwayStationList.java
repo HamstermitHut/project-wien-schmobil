@@ -6,15 +6,20 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.security.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.*;
 
 
 public class SubwayStationList extends Application{
@@ -24,6 +29,9 @@ public class SubwayStationList extends Application{
     private BufferedReader bufferedReader;
     private PrintWriter printWriter;
     private ObjectInputStream objectInputStream;
+    private TextArea textArea;
+    private ComboBox time;
+    private Boolean isMinute;
     public static void main(String[] args) {
         launch(args);
     }
@@ -39,10 +47,12 @@ public class SubwayStationList extends Application{
         this.objectInputStream=new ObjectInputStream(socket.getInputStream());
         schreibeNachricht(socket,"stations");
 
+        ObservableList<String>options=FXCollections.observableArrayList("Minuten","Uhrzeit");
+        time=new ComboBox(options);
         List<String> stations =(List<String>)objectInputStream.readObject();
-
+        time.getSelectionModel().selectFirst();
         System.out.println(stations.toString());
-
+        this.isMinute=true;
         window = primaryStage;
         window.setTitle("Vienna Subway Stations");
 
@@ -56,15 +66,56 @@ public class SubwayStationList extends Application{
 
         // create the "Show Departure Times" button
         Button showDepartureTimesButton = new Button("Show Departure Times");
-        showDepartureTimesButton.setOnAction(event -> showDepartureTimes());
+        showDepartureTimesButton.setOnAction(event -> {showDepartureTimes();});
+
+        time.setOnAction(event -> {
+
+            String s = (String) this.time.getValue();
+
+            if(s.equals("Minuten")){
+                this.isMinute=true;
+            }else{
+                this.isMinute=false;
+            }
+
+            showDepartureTimes();
+
+
+        });
 
         // create the layout
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(20, 20, 20, 20));
-        layout.getChildren().addAll(listView, showDepartureTimesButton);
+        //layout.getChildren().addAll(listView, showDepartureTimesButton);
+
+        textArea = new TextArea();
+        textArea.setEditable(false);
+        textArea.setWrapText(true);
+        textArea.setMaxWidth(Double.MAX_VALUE);
+        textArea.setMaxHeight(Double.MAX_VALUE);
+        textArea.setPrefWidth(300);
+        textArea.setPrefHeight(250);
+
+        Label stationList = new Label();
+        stationList.setText("Bitte wählen Sie eine Station aus");
+        stationList.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
+
+        Label abfahrtZeiten = new Label();
+        abfahrtZeiten.setText("Abfahrtzeiten");
+        abfahrtZeiten.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
+
+        Label auswahlZeit = new Label();
+        auswahlZeit.setText("Abfahrtzeiten anzeigen als:");
+        auswahlZeit.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
+
+        HBox buttons = new HBox(5);
+        buttons.setPadding(new Insets(20, 20, 20, 0));
+        buttons.getChildren().addAll(auswahlZeit,time,showDepartureTimesButton);
+
+        layout.getChildren().addAll(stationList,listView,abfahrtZeiten,textArea,buttons);
 
         // show the window
-        Scene scene = new Scene(layout, 300, 250);
+        Scene scene = new Scene(layout, 600, 700);
         window.setScene(scene);
         window.show();
     }
@@ -100,29 +151,25 @@ public class SubwayStationList extends Application{
         for (Map.Entry<String, List<String>> entry : departureTimes.entrySet()) {
             String line = entry.getKey();
             List<String> times = entry.getValue();
-            sb.append(line + ": ");
+            sb.append(line+ ": ");
+            sb.append("\n");
+
             for (String time : times) {
-                sb.append(time + ", ");
+
+                if(this.isMinute){
+
+
+
+
+                    sb.append(Math.abs(Integer.parseInt(time.substring(time.indexOf(':')+1, time.lastIndexOf(':'))))+", ");
+                }else{
+                    sb.append(time.substring(time.indexOf(':')-2, time.lastIndexOf('+')-4)+", ");
+                    System.out.println(Math.abs(LocalDateTime.now().getHour()-Integer.parseInt(time.substring(time.indexOf(':')-2, time.indexOf(':')))));
+                }
             }
             sb.append("\n");
         }
-        TextArea textArea = new TextArea();
         textArea.setText(sb.toString());
-        textArea.setEditable(false);
-        textArea.setWrapText(true);
-        textArea.setMaxWidth(Double.MAX_VALUE);
-        textArea.setMaxHeight(Double.MAX_VALUE);
-        textArea.setPrefWidth(300);
-        textArea.setPrefHeight(250);
 
-        VBox layout = new VBox(10);
-        layout.setPadding(new Insets(20, 20, 20, 20));
-        layout.getChildren().add(textArea);
-
-        Stage window = new Stage();
-        window.initModality(Modality.APPLICATION_MODAL);
-        window.setTitle("Departure Times");
-        window.setScene(new Scene(layout));
-        window.show();
     }
 }
