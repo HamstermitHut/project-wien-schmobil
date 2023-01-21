@@ -30,7 +30,8 @@ public class ViennaSubwayDepartures {
         for (ViennaSubwayApiMonitor monitor : monitors) {
             List<ViennaSubwayApiLine> lines = monitor.getLines();
             for (ViennaSubwayApiLine line : lines) {
-                String lineNumber = line.getName();
+                String lineNumber = line.getName()+"-"+line.getTowards()+" Plattform "+line.getPlatform()+ "Richtung: "+line.getDirection();
+                lineNumber=lineNumber.replace("ÃŸ","ß").replace("Ã¶","ö").replace("Ã–","Ö").replace("Ã¼","ü").replace("Ã¤","ä").replace("Ã„","Ä").replace("Ã©","é");
                 List<String> lineDepartureTimes = new ArrayList<>();
                 for (ViennaSubwayApiDeparture departure : line.departures.departure) {
                     lineDepartureTimes.add(departure.getDepartureTime().getTimePlanned());
@@ -178,9 +179,13 @@ public class ViennaSubwayDepartures {
     class ViennaSubwayApiDepartureTime {
         @SerializedName("timePlanned")
         String timePlanned;
+        String timeReal;
 
         public String getTimePlanned() {
             return timePlanned;
         }
+
+        @SerializedName("timeReal")
+        public String getTimeReal(){return timeReal;}
     }
 }

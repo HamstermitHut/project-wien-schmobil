@@ -36,6 +36,8 @@ public class SubwayStationList extends Application{
     //Check was ausgewählt wurde
     private Boolean isMinute;
 
+    private ComboBox direction;
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -57,6 +59,12 @@ public class SubwayStationList extends Application{
         this.isMinute=true;
         window = primaryStage;
         window.setTitle("WienSchmobil");
+        ObservableList<String>directionOptions=FXCollections.observableArrayList("Beide Richtungen","Hinfahrt","Rückfahrt");
+
+        direction=new ComboBox(directionOptions);
+        direction.getSelectionModel().selectFirst();
+        direction.setOnAction(event -> showDepartureTimes());
+
 
         // create the ListView for displaying the subway stations
         listView = new ListView<>();
@@ -130,7 +138,7 @@ public class SubwayStationList extends Application{
         buttons.setPadding(new Insets(20, 20, 20, 0));
         buttons.getChildren().addAll(auswahlZeit,time,showDepartureTimesButton,close);
 
-        layout.getChildren().addAll(stationList,listView,abfahrtZeiten,textArea,buttons);
+        layout.getChildren().addAll(stationList,listView,abfahrtZeiten,textArea,buttons,direction);
 
 
 
@@ -166,19 +174,50 @@ public class SubwayStationList extends Application{
         for (Map.Entry<String, List<String>> entry : departureTimes.entrySet()) {
             String line = entry.getKey();
             List<String> times = entry.getValue();
-            sb.append(line+ ": ");
-            sb.append("\n");
+            if(direction.getValue().equals("Beide Richtungen")){
+                sb.append(line+ ": ");
+                sb.append("\n");
 
-            for (String time : times) {
+                for (String time : times) {
 
-                if(this.isMinute){
-                    sb.append(Math.abs(Integer.parseInt(time.substring(time.indexOf(':')+1, time.lastIndexOf(':'))))+", ");
-                }else{
-                    sb.append(time.substring(time.indexOf(':')-2, time.lastIndexOf('+')-4)+", ");
-                    System.out.println(Math.abs(LocalDateTime.now().getHour()-Integer.parseInt(time.substring(time.indexOf(':')-2, time.indexOf(':')))));
+                    if(this.isMinute){
+                        sb.append(Math.abs(Integer.parseInt(time.substring(time.indexOf(':')+1, time.lastIndexOf(':'))))+", ");
+                    }else{
+                        sb.append(time.substring(time.indexOf(':')-2, time.lastIndexOf('+')-4)+", ");
+                        System.out.println(Math.abs(LocalDateTime.now().getHour()-Integer.parseInt(time.substring(time.indexOf(':')-2, time.indexOf(':')))));
+                    }
                 }
+                sb.append("\n");
+            }else if(line.contains("Richtung: H")&&String.valueOf(direction.getValue()).equals("Hinfahrt")){
+                sb.append(line+ ": ");
+                sb.append("\n");
+
+                for (String time : times) {
+
+                    if(this.isMinute){
+                        sb.append(Math.abs(Integer.parseInt(time.substring(time.indexOf(':')+1, time.lastIndexOf(':'))))+", ");
+                    }else{
+                        sb.append(time.substring(time.indexOf(':')-2, time.lastIndexOf('+')-4)+", ");
+                        System.out.println(Math.abs(LocalDateTime.now().getHour()-Integer.parseInt(time.substring(time.indexOf(':')-2, time.indexOf(':')))));
+                    }
+                }
+                sb.append("\n");
+            }else if(line.contains("Richtung: R")&&String.valueOf(direction.getValue()).equals("Rückfahrt")){
+                sb.append(line+ ": ");
+                sb.append("\n");
+
+                for (String time : times) {
+
+                    if(this.isMinute){
+                        sb.append(Math.abs(Integer.parseInt(time.substring(time.indexOf(':')+1, time.lastIndexOf(':'))))+", ");
+                    }else{
+                        sb.append(time.substring(time.indexOf(':')-2, time.lastIndexOf('+')-4)+", ");
+                        System.out.println(Math.abs(LocalDateTime.now().getHour()-Integer.parseInt(time.substring(time.indexOf(':')-2, time.indexOf(':')))));
+                    }
+                }
+                sb.append("\n");
             }
-            sb.append("\n");
+
         }
         textArea.setText(sb.toString());
     }
