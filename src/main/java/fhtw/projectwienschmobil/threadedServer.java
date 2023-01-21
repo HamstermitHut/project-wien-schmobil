@@ -1,8 +1,7 @@
 package fhtw.projectwienschmobil;
 import java.io.File;
 import java.io.RandomAccessFile;
-import java.net.URL;
-import java.nio.file.Path;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;

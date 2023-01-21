@@ -14,10 +14,9 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.net.Socket;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
+
 import java.time.Duration;
-import java.time.LocalDateTime;
+
 import java.time.LocalTime;
 import java.util.*;
 
@@ -172,6 +171,11 @@ public class SubwayStationList extends Application{
         this.printWriter.flush();
     }
 
+
+    /**
+     * Stellt eine Anfrage an den Server mit der ausgewählten Station als Parameter. Der Response wird verarbeitet und in einer TextArea angezeigt. Diese Funktion behandelt die Logik, ob die Zeiten in
+     * Minuten oder als Uhrzeit angezeigt werden soll und die Anzeige einer ausgesuchten Fahrtrichtung.
+     */
     private void showDepartureTimes() {
         String selectedStation = listView.getSelectionModel().getSelectedItem();
         selectedStation = selectedStation.substring(selectedStation.indexOf(",") + 1);
@@ -247,11 +251,12 @@ public class SubwayStationList extends Application{
             }
 
         }
+        textArea.setText("");
         textArea.setText(sb.toString());
     }
 
     /**
-     * Diese Methode dient dazu, die aktuellen Abfahrtszeiten in ein File abzuspeichern. Diese Methode wird durch den klick auf "Speichern" ausgelöst
+     * Diese Methode dient dazu, die aktuellen Abfahrtszeiten in ein File abzuspeichern. Diese Methode wird durch den Klick auf "Speichern" ausgelöst
      * @throws IOException
      */
 
@@ -260,7 +265,6 @@ public class SubwayStationList extends Application{
         path.createNewFile();
         RandomAccessFile randomAccessFile= new RandomAccessFile(path.getAbsolutePath(),"rw");
         randomAccessFile.seek(0L);
-
         randomAccessFile.writeBytes(this.textArea.getText());
         randomAccessFile.close();
     }

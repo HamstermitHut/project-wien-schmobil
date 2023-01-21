@@ -63,6 +63,9 @@ public class ViennaSubwayDepartures {
         }
     }
 
+    /**
+     * ViennaSubwayApiLine definiert die Variablen für den Zugriff auf die API der WienerLinien. Jeder @SerializedName steht für eine Variable aus der API
+     */
     class ViennaSubwayApiLine {
         @SerializedName("name")
         private String name;
