@@ -188,6 +188,7 @@ public class SubwayStationList extends Application{
             e.printStackTrace();
         }
         StringBuilder sb = new StringBuilder();
+        if (departureTimes == null) return;
         for (Map.Entry<String, List<String>> entry : departureTimes.entrySet()) {
             String line = entry.getKey();
             List<String> times = entry.getValue();

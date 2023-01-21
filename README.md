@@ -22,6 +22,6 @@ Der Client kommuniziert mit einem Server, welcher je nach Anfrage auf die API f√
 - [X] Gleis oder Steig des Fahrzeugs anzeigen lassen 3
 - [X] Verbleibende Minuten bis zur Abfahrt anzeigen lassen 3
 - [ ] Versp√§tungen rot anzeigen lassen 1
-- [ ] Es gibt einen Button "Speichern", wo die aktuelle Ansicht als File abgespeichert wird 1
+- [X] Es gibt einen Button "Speichern", wo die aktuelle Ansicht als File abgespeichert wird 1
 - [X] Server-Log um zu Messen, wie viele NutzerInnen sich auf die App einloggen. 3
 
