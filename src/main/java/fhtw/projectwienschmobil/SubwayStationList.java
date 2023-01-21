@@ -38,6 +38,8 @@ public class SubwayStationList extends Application{
 
     private ComboBox direction;
 
+    private Button save;
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -51,11 +53,15 @@ public class SubwayStationList extends Application{
         this.printWriter = new PrintWriter(this.socket.getOutputStream(), true);
         this.bufferedReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
         this.objectInputStream=new ObjectInputStream(socket.getInputStream());
+
         schreibeNachricht(socket,"stations\n");
+
         ObservableList<String>options=FXCollections.observableArrayList("Minuten","Uhrzeit");
+
         time=new ComboBox(options);
-        List<String> stations =(List<String>)objectInputStream.readObject();
         time.getSelectionModel().selectFirst();
+
+        List<String> stations =(List<String>)objectInputStream.readObject();
         this.isMinute=true;
         window = primaryStage;
         window.setTitle("WienSchmobil");
@@ -65,6 +71,15 @@ public class SubwayStationList extends Application{
         direction.getSelectionModel().selectFirst();
         direction.setOnAction(event -> showDepartureTimes());
 
+
+        save=new Button("Speichern");
+        save.setOnAction(event -> {
+            try {
+                saveDepartures();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
         // create the ListView for displaying the subway stations
         listView = new ListView<>();
@@ -138,7 +153,7 @@ public class SubwayStationList extends Application{
 
         HBox buttons = new HBox(5);
         buttons.setPadding(new Insets(20, 20, 20, 0));
-        buttons.getChildren().addAll(auswahlZeit,time,direction,close);
+        buttons.getChildren().addAll(auswahlZeit,time,direction,close,save);
 
         layout.getChildren().addAll(stationList,listView,abfahrtZeiten,textArea,buttons);
 
@@ -224,7 +239,13 @@ public class SubwayStationList extends Application{
         textArea.setText(sb.toString());
     }
 
-    public void saveDepartures(){
+    public void saveDepartures() throws IOException {
+        File path = new File("departures.txt");
+        path.createNewFile();
+        RandomAccessFile randomAccessFile= new RandomAccessFile(path.getAbsolutePath(),"rw");
+        randomAccessFile.seek(0L);
 
+        randomAccessFile.writeBytes(this.textArea.getText());
+        randomAccessFile.close();
     }
 }
