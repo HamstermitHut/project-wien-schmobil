@@ -29,8 +29,11 @@ public class SubwayStationList extends Application{
     private BufferedReader bufferedReader;
     private PrintWriter printWriter;
     private ObjectInputStream objectInputStream;
+    //Anzeige der Abfahrtszeiten
     private TextArea textArea;
+    //Auswahl zwischen Uhrzeit und Minuten
     private ComboBox time;
+    //Check was ausgewählt wurde
     private Boolean isMinute;
 
     public static void main(String[] args) {
@@ -82,10 +85,7 @@ public class SubwayStationList extends Application{
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             System.exit(0);
-
-
         });
 
         //choose between minutes and timestamps
@@ -149,15 +149,7 @@ public class SubwayStationList extends Application{
         this.printWriter.println(nachricht);
         this.printWriter.flush();
     }
-    /**
-     * Methode zum kommunizieren (lesen) mit dem Server über Streams und Sockets
-     * @param socket
-     * @throws IOException
-     */
-    String leseNachricht(Socket socket) throws IOException {
-        String nachricht = this.bufferedReader.readLine();
-        return nachricht;
-    }
+
     private void showDepartureTimes() {
         String selectedStation = listView.getSelectionModel().getSelectedItem();
         selectedStation = selectedStation.substring(selectedStation.indexOf(",") + 1);
@@ -189,6 +181,9 @@ public class SubwayStationList extends Application{
             sb.append("\n");
         }
         textArea.setText(sb.toString());
+    }
+
+    public void saveDepartures(){
 
     }
 }
