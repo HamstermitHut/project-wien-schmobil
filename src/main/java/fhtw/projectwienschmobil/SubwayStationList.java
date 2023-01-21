@@ -32,6 +32,7 @@ public class SubwayStationList extends Application{
     private TextArea textArea;
     private ComboBox time;
     private Boolean isMinute;
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -45,42 +46,57 @@ public class SubwayStationList extends Application{
         this.printWriter = new PrintWriter(this.socket.getOutputStream(), true);
         this.bufferedReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
         this.objectInputStream=new ObjectInputStream(socket.getInputStream());
-        schreibeNachricht(socket,"stations");
-
+        schreibeNachricht(socket,"stations\n");
         ObservableList<String>options=FXCollections.observableArrayList("Minuten","Uhrzeit");
         time=new ComboBox(options);
         List<String> stations =(List<String>)objectInputStream.readObject();
         time.getSelectionModel().selectFirst();
-        System.out.println(stations.toString());
         this.isMinute=true;
         window = primaryStage;
-        window.setTitle("Vienna Subway Stations");
+        window.setTitle("WienSchmobil");
 
         // create the ListView for displaying the subway stations
         listView = new ListView<>();
         listView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        listView.getSelectionModel().selectFirst();
 
         // load the subway station names from the API
         ObservableList<String> items = FXCollections.observableArrayList(stations);
         listView.setItems(items);
 
         // create the "Show Departure Times" button
-        Button showDepartureTimesButton = new Button("Show Departure Times");
+        Button showDepartureTimesButton = new Button("Abfahrtszeiten anzeigen");
         showDepartureTimesButton.setOnAction(event -> {showDepartureTimes();});
 
+        Button close = new Button("Schließen");
+        close.setOnAction(event -> {
+
+            printWriter.write("EXIT");
+            printWriter.flush();
+
+            try {
+                this.objectInputStream.close();
+                this.printWriter.close();
+                this.socket.close();
+                this.bufferedReader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            System.exit(0);
+
+
+        });
+
+        //choose between minutes and timestamps
         time.setOnAction(event -> {
-
             String s = (String) this.time.getValue();
-
             if(s.equals("Minuten")){
                 this.isMinute=true;
             }else{
                 this.isMinute=false;
             }
-
             showDepartureTimes();
-
-
         });
 
         // create the layout
@@ -105,14 +121,18 @@ public class SubwayStationList extends Application{
         abfahrtZeiten.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
 
         Label auswahlZeit = new Label();
-        auswahlZeit.setText("Abfahrtzeiten anzeigen als:");
+        auswahlZeit.setText("Abfahrtzeiten \n anzeigen als:");
         auswahlZeit.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
+
+
 
         HBox buttons = new HBox(5);
         buttons.setPadding(new Insets(20, 20, 20, 0));
-        buttons.getChildren().addAll(auswahlZeit,time,showDepartureTimesButton);
+        buttons.getChildren().addAll(auswahlZeit,time,showDepartureTimesButton,close);
 
         layout.getChildren().addAll(stationList,listView,abfahrtZeiten,textArea,buttons);
+
+
 
         // show the window
         Scene scene = new Scene(layout, 600, 700);
@@ -142,9 +162,12 @@ public class SubwayStationList extends Application{
         String selectedStation = listView.getSelectionModel().getSelectedItem();
         selectedStation = selectedStation.substring(selectedStation.indexOf(",") + 1);
         Map<String, List<String>> departureTimes = new HashMap<>();
+        this.printWriter.println("send times;"+selectedStation);
+        this.printWriter.flush();
+
         try {
-            departureTimes = ViennaSubwayDepartures.getDepartureTimes(selectedStation);
-        } catch (IOException e) {
+            departureTimes =(Map<String, List<String>>) this.objectInputStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         StringBuilder sb = new StringBuilder();
@@ -157,10 +180,6 @@ public class SubwayStationList extends Application{
             for (String time : times) {
 
                 if(this.isMinute){
-
-
-
-
                     sb.append(Math.abs(Integer.parseInt(time.substring(time.indexOf(':')+1, time.lastIndexOf(':'))))+", ");
                 }else{
                     sb.append(time.substring(time.indexOf(':')-2, time.lastIndexOf('+')-4)+", ");

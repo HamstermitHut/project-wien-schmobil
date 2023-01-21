@@ -43,6 +43,7 @@ public class ViennaSubwayDepartures {
     }
 
     private static String getJsonFromUrl(String url) throws IOException {
+
         URL website = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) website.openConnection();
         connection.setRequestMethod("GET");
