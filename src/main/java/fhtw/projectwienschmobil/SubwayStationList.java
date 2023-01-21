@@ -74,11 +74,13 @@ public class SubwayStationList extends Application{
         // load the subway station names from the API
         ObservableList<String> items = FXCollections.observableArrayList(stations);
         listView.setItems(items);
+        listView.setOnMouseClicked(event -> showDepartureTimes());
 
         // create the "Show Departure Times" button
+        /*
         Button showDepartureTimesButton = new Button("Abfahrtszeiten anzeigen");
         showDepartureTimesButton.setOnAction(event -> {showDepartureTimes();});
-
+        */
         Button close = new Button("Schließen");
         close.setOnAction(event -> {
 
@@ -130,15 +132,15 @@ public class SubwayStationList extends Application{
 
         Label auswahlZeit = new Label();
         auswahlZeit.setText("Abfahrtzeiten \n anzeigen als:");
-        auswahlZeit.setFont(Font.font("Verdana", FontWeight.BOLD, 11));
+        auswahlZeit.setFont(Font.font("Verdana", FontWeight.BOLD, 10));
 
 
 
         HBox buttons = new HBox(5);
         buttons.setPadding(new Insets(20, 20, 20, 0));
-        buttons.getChildren().addAll(auswahlZeit,time,showDepartureTimesButton,close);
+        buttons.getChildren().addAll(auswahlZeit,time,direction,close);
 
-        layout.getChildren().addAll(stationList,listView,abfahrtZeiten,textArea,buttons,direction);
+        layout.getChildren().addAll(stationList,listView,abfahrtZeiten,textArea,buttons);
 
 
 

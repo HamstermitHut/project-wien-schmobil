@@ -18,8 +18,8 @@ Der Client kommuniziert mit einem Server, welcher je nach Anfrage auf die API f�
 - [ ] Der Client kann die Haltestellen filtern nach Bezirken 1
 - [ ] Der Client kann die Haltestellen filtern nach Beförderungsmittel (Bus, U-Bahn, ....) 2
 - [X] Der Client kann die Abfahrtszeitenliste filtern nach Beförderungsmittel 2
-- [ ] Fahrtrichtung auswählen, wenn nur ein Beförderungsmittel auswählt ist 2
-- [ ] Gleis oder Steig des Fahrzeugs anzeigen lassen 3
+- [X] Fahrtrichtung auswählen, wenn nur ein Beförderungsmittel auswählt ist 2
+- [X] Gleis oder Steig des Fahrzeugs anzeigen lassen 3
 - [X] Verbleibende Minuten bis zur Abfahrt anzeigen lassen 3
 - [ ] Verspätungen rot anzeigen lassen 1
 - [ ] Es gibt einen Button "Speichern", wo die aktuelle Ansicht als File abgespeichert wird 1
