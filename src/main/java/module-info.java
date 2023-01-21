@@ -3,6 +3,7 @@ module fhtw.projectwienschmobil {
     requires javafx.fxml;
     requires com.google.gson;
     requires javafx.graphics;
+    requires java.sql;
 
 
     opens fhtw.projectwienschmobil to com.google.gson, javafx.fxml;

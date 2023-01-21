@@ -10,15 +10,15 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.net.Socket;
-import java.security.Timestamp;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 
@@ -47,17 +47,19 @@ public class SubwayStationList extends Application{
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        String zuSendendeNachricht, ip = "127.0.0.1";
+        //Initilisierung der Verbindung zum threadedServer
+        String ip = "127.0.0.1";
         int port = 1234;
         this.socket = new Socket(ip, port);
         this.printWriter = new PrintWriter(this.socket.getOutputStream(), true);
         this.bufferedReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
         this.objectInputStream=new ObjectInputStream(socket.getInputStream());
 
-        schreibeNachricht(socket,"stations\n");
+        //Anfordern der Liste der Stationen
+        schreibeNachricht(socket, "stations\n");
 
+        //Werte für die ComboBox
         ObservableList<String>options=FXCollections.observableArrayList("Minuten","Uhrzeit");
-
         time=new ComboBox(options);
         time.getSelectionModel().selectFirst();
 
@@ -91,11 +93,7 @@ public class SubwayStationList extends Application{
         listView.setItems(items);
         listView.setOnMouseClicked(event -> showDepartureTimes());
 
-        // create the "Show Departure Times" button
-        /*
-        Button showDepartureTimesButton = new Button("Abfahrtszeiten anzeigen");
-        showDepartureTimesButton.setOnAction(event -> {showDepartureTimes();});
-        */
+
         Button close = new Button("Schließen");
         close.setOnAction(event -> {
 
@@ -127,7 +125,6 @@ public class SubwayStationList extends Application{
         // create the layout
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(20, 20, 20, 20));
-        //layout.getChildren().addAll(listView, showDepartureTimesButton);
 
         textArea = new TextArea();
         textArea.setEditable(false);
@@ -199,10 +196,14 @@ public class SubwayStationList extends Application{
                 for (String time : times) {
 
                     if(this.isMinute){
-                        sb.append(Math.abs(Integer.parseInt(time.substring(time.indexOf(':')+1, time.lastIndexOf(':'))))+", ");
+
+                        LocalTime start = LocalTime.now();
+                        LocalTime end =LocalTime.of(Integer.parseInt(time.substring(time.indexOf(':')-2, time.indexOf(':'))),Integer.parseInt(time.substring(time.indexOf(':')+1, time.lastIndexOf(':'))),Integer.parseInt(time.substring(time.lastIndexOf(':')+1, time.lastIndexOf(':')+3)));
+                        Duration duration=Duration.between(start,end);
+
+                        sb.append(duration.getSeconds()/60+", ");
                     }else{
                         sb.append(time.substring(time.indexOf(':')-2, time.lastIndexOf('+')-4)+", ");
-                        System.out.println(Math.abs(LocalDateTime.now().getHour()-Integer.parseInt(time.substring(time.indexOf(':')-2, time.indexOf(':')))));
                     }
                 }
                 sb.append("\n");
@@ -213,10 +214,16 @@ public class SubwayStationList extends Application{
                 for (String time : times) {
 
                     if(this.isMinute){
-                        sb.append(Math.abs(Integer.parseInt(time.substring(time.indexOf(':')+1, time.lastIndexOf(':'))))+", ");
+
+                        LocalTime start = LocalTime.now();
+                        LocalTime end =LocalTime.of(Integer.parseInt(time.substring(time.indexOf(':')-2, time.indexOf(':'))),Integer.parseInt(time.substring(time.indexOf(':')+1, time.lastIndexOf(':'))),Integer.parseInt(time.substring(time.lastIndexOf(':')+1, time.lastIndexOf(':')+3)));
+                        Duration duration=Duration.between(start,end);
+
+
+
+                        sb.append(duration.getSeconds()/60+", ");
                     }else{
                         sb.append(time.substring(time.indexOf(':')-2, time.lastIndexOf('+')-4)+", ");
-                        System.out.println(Math.abs(LocalDateTime.now().getHour()-Integer.parseInt(time.substring(time.indexOf(':')-2, time.indexOf(':')))));
                     }
                 }
                 sb.append("\n");
@@ -227,10 +234,13 @@ public class SubwayStationList extends Application{
                 for (String time : times) {
 
                     if(this.isMinute){
-                        sb.append(Math.abs(Integer.parseInt(time.substring(time.indexOf(':')+1, time.lastIndexOf(':'))))+", ");
+                        LocalTime start = LocalTime.now();
+                        LocalTime end =LocalTime.of(Integer.parseInt(time.substring(time.indexOf(':')-2, time.indexOf(':'))),Integer.parseInt(time.substring(time.indexOf(':')+1, time.lastIndexOf(':'))),Integer.parseInt(time.substring(time.lastIndexOf(':')+1, time.lastIndexOf(':')+3)));
+                        Duration duration=Duration.between(start,end);
+
+                        sb.append(duration.getSeconds()/60+", ");
                     }else{
                         sb.append(time.substring(time.indexOf(':')-2, time.lastIndexOf('+')-4)+", ");
-                        System.out.println(Math.abs(LocalDateTime.now().getHour()-Integer.parseInt(time.substring(time.indexOf(':')-2, time.indexOf(':')))));
                     }
                 }
                 sb.append("\n");
@@ -239,6 +249,11 @@ public class SubwayStationList extends Application{
         }
         textArea.setText(sb.toString());
     }
+
+    /**
+     * Diese Methode dient dazu, die aktuellen Abfahrtszeiten in ein File abzuspeichern. Diese Methode wird durch den klick auf "Speichern" ausgelöst
+     * @throws IOException
+     */
 
     public void saveDepartures() throws IOException {
         File path = new File("departures.txt");
