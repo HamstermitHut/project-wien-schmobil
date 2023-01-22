@@ -21,7 +21,7 @@ public class ViennaSubwayDepartures {
 
     /**
      * get json from getJsonFromUrl(url) and parse json with the gson library
-     * so that the departureTimes can be return as Map<String, List<String>>
+     * so that the departureTimes can be return as "Map"
      * @param selectedStation
      * @return departureTimes
      * @throws IOException

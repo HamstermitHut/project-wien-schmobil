@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Behandelt die Verbindung zur Datenbank der WienerLinien, die ein CSV mit allen Haltestellen im CSV_Format zur Verfügung stellen. Diese Datei wird mittels Streams abgefragt und eingelesen als Strings.
+ * Handles the connection to the WienerLinien database, which provides a
+ * CSV with all stops in CSV_Format. This file is queried by means of streams and read in as strings.
  */
 public class ViennaSubwayStations {
 
@@ -17,8 +18,8 @@ public class ViennaSubwayStations {
     private static final String CSV_URL = "https://www.wienerlinien.at/ogd_realtime/doku/ogd/wienerlinien-ogd-haltestellen.csv";
 
     /**
-     * Statische Methode, welche die Daten mittels URL und BufferedReader über Streams eine CSV Datei einliest.
-     * @return eine "List" bestehenden aus Strings mit Stationsnamen, StationsID
+     * Static method which reads the data via URL and BufferedReader over streams a CSV file.
+     * @return a "List" consisting of strings with station name, station ID
      */
     public static List<String> getSubwayStations() {
         try {

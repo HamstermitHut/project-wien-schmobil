@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A server which is suposed to make API-calls to the "WienerLinienApi" and send the results to the client.
+ * Handles a client-connection using sockets. Is suposed to make API-calls to the "WienerLinienApi" unsing several classes and send the results to the client.
+ * The Server is running by a thread
  */
 public class Server extends Thread{
 
