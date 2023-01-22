@@ -15,6 +15,14 @@ import java.util.Map;
 
 public class ViennaSubwayDepartures {
     private static final String API_URL = "https://www.wienerlinien.at/ogd_realtime/monitor?diva=";
+
+    /**
+     * get json from getJsonFromUrl(url) and parse json with the gson library
+     * so that the departureTimes can be return as Map<String, List<String>>
+     * @param selectedStation
+     * @return departureTimes
+     * @throws IOException
+     */
     public static Map<String, List<String>> getDepartureTimes(String selectedStation) throws IOException {
         String url = API_URL + selectedStation;
         String json = getJsonFromUrl(url);
@@ -43,6 +51,12 @@ public class ViennaSubwayDepartures {
         return departureTimes;
     }
 
+    /**
+     * get the json from the api
+     * @param url
+     * @return json
+     * @throws IOException
+     */
     private static String getJsonFromUrl(String url) throws IOException {
 
         URL website = new URL(url);
