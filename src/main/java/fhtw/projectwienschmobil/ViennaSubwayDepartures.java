@@ -13,6 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This Class handles the api connection with wiener linien api
+ */
 public class ViennaSubwayDepartures {
     private static final String API_URL = "https://www.wienerlinien.at/ogd_realtime/monitor?diva=";
 
