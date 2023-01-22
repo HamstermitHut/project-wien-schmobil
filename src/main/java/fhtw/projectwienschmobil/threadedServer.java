@@ -7,13 +7,13 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
- * Diese Klasse dient dazu mehrere eingehende Verbindungen von Clients anzunehmen und einen Server Thread mit einer Server-Client-Verbindung zu starten
+ * This class is used to accept multiple incoming connections from clients and start a serverthread to setup a server-client connection
  *
  */
 public class threadedServer {
     /**
-     * Klasse threadedServer: Wartet auf eingehende Verbindungen und startet dabei einen neuen Server-Thread.
-     * Dabei wird der Client-Socket als Parameter für den neuen Server übergeben.
+     * Waits for incoming connections and starts a new server thread.
+     * The client socket is passed as a parameter for the new server.
      * @param args
      * @throws IOException
      */
@@ -45,10 +45,9 @@ public class threadedServer {
     }
 
     /**
-     * Diese Funktion dient zum Messen, wie viele NutzerInnen sich auf diese App anmelden. Hierbei werden
-     * die jeweiligen Sockets mit Portnummer und Ip-Adresse in ein Log-File geschrieben
-     * @param socket --> aktuelle Socketverbindung
-     * @throws IOException --> Fehler beim Dateiauslesen
+     * This function is used to measure how many users log on to this app. The respective sockets with port number and Ip address are written to a log file.
+     * @param socket --> current Socketconnection
+     * @throws IOException
      */
     private static void makeFileLog(Socket socket) throws IOException {
         File path = new File("log.txt");

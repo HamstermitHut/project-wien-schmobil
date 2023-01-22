@@ -20,9 +20,18 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.util.*;
 
-
+/**
+ * The class "SubwayStationList" is defined in our application as a client which is able to set up a connection with a server. The client is able to make requests to get data from the server
+ *
+ */
 public class SubwayStationList extends Application{
+
+     //The ui-window
+
     private Stage window;
+
+    //A list for the stations
+
     private ListView<String> listView;
     private Socket socket;
     private BufferedReader bufferedReader;
@@ -39,10 +48,20 @@ public class SubwayStationList extends Application{
 
     private Button save;
 
+    /**
+     * Starts the application
+     * @param args
+     */
     public static void main(String[] args) {
         launch(args);
     }
 
+
+    /**
+     * Building the UI and setting up a TCP-connection to a server, by using streams, sockets, printWriter and bufferReader.
+     * @param primaryStage
+     * @throws Exception
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
 
@@ -161,7 +180,7 @@ public class SubwayStationList extends Application{
         window.show();
     }
     /**
-     * Methode zum kommunizieren (schreiben) mit dem Server über Streams und Sockets
+     * Communication with the server to send messages using "sockets" and "printWriter".
      * @param socket
      * @param nachricht
      * @throws IOException
@@ -173,8 +192,8 @@ public class SubwayStationList extends Application{
 
 
     /**
-     * Stellt eine Anfrage an den Server mit der ausgewählten Station als Parameter. Der Response wird verarbeitet und in einer TextArea angezeigt. Diese Funktion behandelt die Logik, ob die Zeiten in
-     * Minuten oder als Uhrzeit angezeigt werden soll und die Anzeige einer ausgesuchten Fahrtrichtung.
+     * Makes a request to the server with the selected station as a parameter. The response is processed and displayed in a TextArea.
+     * This function handles the logic of whether the times should be displayed in minutes or as a time and the display of a selected direction of travel.
      */
     private void showDepartureTimes() {
         String selectedStation = listView.getSelectionModel().getSelectedItem();
@@ -256,7 +275,8 @@ public class SubwayStationList extends Application{
     }
 
     /**
-     * Diese Methode dient dazu, die aktuellen Abfahrtszeiten in ein File abzuspeichern. Diese Methode wird durch den Klick auf "Speichern" ausgelöst
+     * This method is used to save the current departure times in a file. This method is triggered by clicking on "Speichern".
+     * The file will be saved in the root directory of this project as a ".txt"
      * @throws IOException
      */
 
