@@ -34,7 +34,6 @@ public class SubwayStationList extends Application{
 
     private ListView<String> listView;
     private Socket socket;
-    private BufferedReader bufferedReader;
     private PrintWriter printWriter;
     private ObjectInputStream objectInputStream;
     //Anzeige der Abfahrtszeiten
@@ -70,7 +69,6 @@ public class SubwayStationList extends Application{
         int port = 1234;
         this.socket = new Socket(ip, port);
         this.printWriter = new PrintWriter(this.socket.getOutputStream(), true);
-        this.bufferedReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
         this.objectInputStream=new ObjectInputStream(socket.getInputStream());
 
         //Anfordern der Liste der Stationen
@@ -122,7 +120,6 @@ public class SubwayStationList extends Application{
                 this.objectInputStream.close();
                 this.printWriter.close();
                 this.socket.close();
-                this.bufferedReader.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -213,9 +210,12 @@ public class SubwayStationList extends Application{
             String line = entry.getKey();
             List<String> times = entry.getValue();
             if(direction.getValue().equals("Beide Richtungen")){
-                sb.append(line+ ": ");
+                sb.append(line.replace("Richtung: H","").replace("Richtung: R","")+ ": ");
                 sb.append("\n");
 
+                appendTime(sb,times);
+
+                /**
                 for (String time : times) {
 
                     if(this.isMinute){
@@ -230,6 +230,7 @@ public class SubwayStationList extends Application{
                     }
                 }
                 sb.append("\n");
+                 */
             }else if(line.contains("Richtung: H")&&String.valueOf(direction.getValue()).equals("Hinfahrt")){
                 sb.append(line+ ": ");
                 sb.append("\n");
@@ -288,4 +289,23 @@ public class SubwayStationList extends Application{
         randomAccessFile.writeBytes(this.textArea.getText());
         randomAccessFile.close();
     }
+
+    public void appendTime(StringBuilder sb,List<String> times){
+
+        for (String time : times) {
+
+            if(this.isMinute){
+                LocalTime start = LocalTime.now();
+                LocalTime end =LocalTime.of(Integer.parseInt(time.substring(time.indexOf(':')-2, time.indexOf(':'))),Integer.parseInt(time.substring(time.indexOf(':')+1, time.lastIndexOf(':'))),Integer.parseInt(time.substring(time.lastIndexOf(':')+1, time.lastIndexOf(':')+3)));
+                Duration duration=Duration.between(start,end);
+
+                sb.append(duration.getSeconds()/60+", ");
+            }else{
+                sb.append(time.substring(time.indexOf(':')-2, time.lastIndexOf('+')-4)+", ");
+            }
+        }
+        sb.append("\n");
+
+    }
+
 }
