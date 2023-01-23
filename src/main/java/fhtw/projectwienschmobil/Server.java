@@ -52,7 +52,6 @@ public class Server extends Thread{
         List<String> stations=ViennaSubwayStations.getSubwayStations();
         outputStream.writeObject(stations);
         this.outputStream.flush();
-        this.socket.getOutputStream().flush();
     }
 
     /**
@@ -70,7 +69,6 @@ public class Server extends Thread{
         }
         outputStream.writeObject(departureTimes);
         outputStream.flush();
-        this.socket.getOutputStream().flush();
     }
 
     /**

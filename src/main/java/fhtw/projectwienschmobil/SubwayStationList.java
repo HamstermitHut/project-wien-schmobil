@@ -261,7 +261,7 @@ public class SubwayStationList extends Application{
         File path = new File("departures.txt");
         path.createNewFile();
         RandomAccessFile randomAccessFile= new RandomAccessFile(path.getAbsolutePath(),"rw");
-        randomAccessFile.seek(0L);
+        randomAccessFile.setLength(0);
         randomAccessFile.writeBytes(this.textArea.getText());
         randomAccessFile.close();
     }
