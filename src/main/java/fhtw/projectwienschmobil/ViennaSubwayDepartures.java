@@ -66,8 +66,8 @@ public class ViennaSubwayDepartures {
         HttpURLConnection connection = (HttpURLConnection) website.openConnection();
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Accept", "application/json");
-        connection.setConnectTimeout(5000);
-        connection.setReadTimeout(5000);
+        connection.setConnectTimeout(1000);
+        connection.setReadTimeout(1000);
 
         try (InputStreamReader in = new InputStreamReader(connection.getInputStream());
              BufferedReader reader = new BufferedReader(in)) {

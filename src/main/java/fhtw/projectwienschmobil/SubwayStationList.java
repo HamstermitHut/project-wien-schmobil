@@ -235,42 +235,15 @@ public class SubwayStationList extends Application{
                 sb.append("\n");
                  */
             }else if(line.contains("Richtung: H")&&String.valueOf(direction.getValue()).equals("Hinfahrt")){
-                sb.append(line+ ": ");
+                sb.append(line.replace("Richtung: H","")+ ": ");
                 sb.append("\n");
 
-                for (String time : times) {
-
-                    if(this.isMinute){
-
-                        LocalTime start = LocalTime.now();
-                        LocalTime end =LocalTime.of(Integer.parseInt(time.substring(time.indexOf(':')-2, time.indexOf(':'))),Integer.parseInt(time.substring(time.indexOf(':')+1, time.lastIndexOf(':'))),Integer.parseInt(time.substring(time.lastIndexOf(':')+1, time.lastIndexOf(':')+3)));
-                        Duration duration=Duration.between(start,end);
-
-
-
-                        sb.append(duration.getSeconds()/60+", ");
-                    }else{
-                        sb.append(time.substring(time.indexOf(':')-2, time.lastIndexOf('+')-4)+", ");
-                    }
-                }
-                sb.append("\n");
+                appendTime(sb,times);
             }else if(line.contains("Richtung: R")&&String.valueOf(direction.getValue()).equals("Rückfahrt")){
-                sb.append(line+ ": ");
+                sb.append(line.replace("Richtung: R","")+ ": ");
                 sb.append("\n");
 
-                for (String time : times) {
-
-                    if(this.isMinute){
-                        LocalTime start = LocalTime.now();
-                        LocalTime end =LocalTime.of(Integer.parseInt(time.substring(time.indexOf(':')-2, time.indexOf(':'))),Integer.parseInt(time.substring(time.indexOf(':')+1, time.lastIndexOf(':'))),Integer.parseInt(time.substring(time.lastIndexOf(':')+1, time.lastIndexOf(':')+3)));
-                        Duration duration=Duration.between(start,end);
-
-                        sb.append(duration.getSeconds()/60+", ");
-                    }else{
-                        sb.append(time.substring(time.indexOf(':')-2, time.lastIndexOf('+')-4)+", ");
-                    }
-                }
-                sb.append("\n");
+                appendTime(sb,times);
             }
 
         }
@@ -293,6 +266,11 @@ public class SubwayStationList extends Application{
         randomAccessFile.close();
     }
 
+    /**
+     * Uses the respones of the server to calculate the time until arrival or the time in HH:MM:SS to display it in the app
+     * @param sb
+     * @param times
+     */
     public void appendTime(StringBuilder sb,List<String> times){
 
         for (String time : times) {
