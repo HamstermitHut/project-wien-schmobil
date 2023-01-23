@@ -1,3 +1,8 @@
+# Wien Schmobil
+
+- Markus Frank (ic22b072@technikum-wien.at)
+- Sam Hediyehloo (ic22b081@technikum-wien.at)
+
 ## Programmbeschreibung
 
 Bei diesem Programm handelt es sich um eine Client-Server Architektur, wobei der Server als threaded Server geführt wird der mehrere Clients annehmen kann. Das Programm erfüllt die Funktion, dass es einem Benutzer eine Oberfläche als GUI anbietet, wo man je nach Auswahl die Abfahrtszeiten einer Haltestelle auswählen und einsehen kann. Die Haltestellenliste wird mit einem Request auf https://www.data.gv.at abgerufen.
