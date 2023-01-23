@@ -49,7 +49,7 @@ public class threadedServer {
      * @param socket --> current Socketconnection
      * @throws IOException
      */
-    private static void makeFileLog(Socket socket) throws IOException {
+    public static void makeFileLog(Socket socket) throws IOException {
         File path = new File("log.txt");
         System.out.println(path.getAbsolutePath());
         path.createNewFile();
